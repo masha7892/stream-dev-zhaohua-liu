@@ -181,7 +181,8 @@ DWD:(getKafkaDDL最早还是最晚读取?)
                                             使用Flink的状态编程  判断是否为加购独立用户
                                             开窗聚合每日加购用户数,补充stt,edt,curDate到实体类
                                             写入doris
-    realtime-dws-trade-sku-order-window
+    realtime-dws-trade-sku-order-window 写入doris
+    大屏控件
 
 
 
