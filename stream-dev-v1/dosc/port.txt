@@ -181,8 +181,28 @@ DWD:(getKafkaDDL最早还是最晚读取?)
                                             使用Flink的状态编程  判断是否为加购独立用户
                                             开窗聚合每日加购用户数,补充stt,edt,curDate到实体类
                                             写入doris
-    realtime-dws-trade-sku-order-window 写入doris
-    大屏控件
+    realtime-dws-trade-sku-order-window
+                                            过滤空消息  并对流中数据进行类型转换    jsonStr->jsonObj
+                                            按照唯一键(订单明细的id)进行分组
+                                            使用状态+抵消的方法对重复的id去重
+                                            指定水位线
+                                            提取度量值字段,写入jsonObject
+                                            按sku_id分组,准备进行度量值聚合
+                                            开窗,聚合度量值
+                                            异步IO关联补充维度数据
+                                            写入doris
+
+    realtime-dws-trade-province-order-window
+                                            过滤空数据，并且酱string转换为JsonObject
+                                            按照唯一键(订单明细的id)进行分组
+                                            使用状态变量追加负的度量值的实现去重
+                                            设置水位线
+                                            提取需要的字段到新的json
+                                            按省份分组
+                                            开窗聚合，统计订单总数和订单总金额，补充窗口时间字段
+                                            使用异步IO关联省份名
+                                            写入doris
+    ADS：使用doris创建fineReport大屏
 
 
 

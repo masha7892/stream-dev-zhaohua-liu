@@ -55,7 +55,7 @@ public class DwdBaseDb extends BaseApp {
                     }
                 }
         );
-        //使用FlinkCDC读取配置table_process_dwd表中的配置信息
+        //使用FlinkCDC读取mysql配置表table_process_dwd表中的配置信息
         MySqlSource<String> mysqlSource = FlinkSourceUtil.getMysqlSource("e_commerce_config", "table_process_dwd");
         DataStreamSource<String> mysqlStrDS = env.fromSource(mysqlSource, WatermarkStrategy.noWatermarks(), "mysql_source");
         //配置信息转换为实体类
@@ -67,19 +67,22 @@ public class DwdBaseDb extends BaseApp {
                         String op = jsonObj.getString("op");
                         TableProcessDwd tp = null;
                         if ("d".equals(op)) {
+                            //对配置表进行了删除操作   需要从before属性中获取删除前配置信息
                             tp = jsonObj.getObject("before", TableProcessDwd.class);
                         } else {
+                            //对配置表进行了读取、插入、更新操作   需要从after属性中获取配置信息
                             tp = jsonObj.getObject("after", TableProcessDwd.class);
                         }
+                        //将配置表的op字段加入实体类
                         tp.setOp(op);
                         return tp;
                     }
                 }
         );
-        //转为广播流
+        //配置信息转为广播流
         MapStateDescriptor<String, TableProcessDwd> mapStateDescriptor = new MapStateDescriptor<>("mapStateDescriptor", String.class, TableProcessDwd.class);
         BroadcastStream<TableProcessDwd> broadcast = tpDS.broadcast(mapStateDescriptor);
-        //关联数据流
+        //关联ods_initial数据流,这里的传入的数据流是完整的cdc格式json
         BroadcastConnectedStream<JSONObject, TableProcessDwd> connectDS = jsonObjDS.connect(broadcast);
         SingleOutputStreamOperator<Tuple2<JSONObject, TableProcessDwd>> processDS = connectDS.process(new BaseDbTableProcessFunction(mapStateDescriptor));
 

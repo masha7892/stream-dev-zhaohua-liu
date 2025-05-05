@@ -34,15 +34,17 @@ public class BaseDbTableProcessFunction extends  BroadcastProcessFunction<JSONOb
     }
 
     //open方法
-    //将配置信息预加载到程序中
+    //使用jdbc直接读取mysql,将配置信息预加载到程序的HashMap中
     @Override
     public void open(Configuration parameters) throws Exception {
         Connection mysqlConn = JDBCUtil.getMySQLConnection();
         List<TableProcessDwd> tableProcessDwdList = JDBCUtil.queryList(mysqlConn, "select * from e_commerce_config.table_process_dwd", TableProcessDwd.class, true);
+        //拼接来源表和操作类型
         for (TableProcessDwd tableProcessDwd : tableProcessDwdList) {
             String key = tableProcessDwd.getSourceTable() + ":" + tableProcessDwd.getSourceType();
             configMap.put(key,tableProcessDwd);
         }
+        //关闭jdbc连接
         JDBCUtil.closeMySQLConnect(mysqlConn);
 
     }
@@ -55,17 +57,18 @@ public class BaseDbTableProcessFunction extends  BroadcastProcessFunction<JSONOb
         String table = jsonObject.getJSONObject("source").getString("table");
         //获取业务数据进行的操作
         String op = jsonObject.getString("op");
-        //拼接key
+        //拼接表面和op字段为key
         String key = table + ":" + op;
         //获取广播状态
         TableProcessDwd tableProcessDwd = null;
 
         ReadOnlyBroadcastState<String, TableProcessDwd> broadcastState = readOnlyContext.getBroadcastState(mapStateDescriptor);
+        //如果从HashMap或者广播流读取到key对应的value
         if((tableProcessDwd=broadcastState.get(key))!=null
         || (tableProcessDwd=configMap.get(key))!=null){
-            //因为key中包含了op字段,所以我们向下游传播时,完全可以
+            //因为key中包含了op字段,所以我们向下游传播时,实现了对业务数据的op字段的筛选
+            //比如读取order_info表操作类型为c的数据
             //op=d时,传递before,其他的传递after,
-            //然后使用op字段进行操作,其次dim层的也有op字段
             JSONObject dataJson = null;
             if ("d".equals(op)){
                 dataJson = jsonObject.getJSONObject("before");
@@ -91,6 +94,8 @@ public class BaseDbTableProcessFunction extends  BroadcastProcessFunction<JSONOb
         String sourceTable = tableProcessDwd.getSourceTable();
         String sourceType = tableProcessDwd.getSourceType();
         String key = sourceTable + ":" + sourceType;
+
+        //根据实体类的op字段对广播状态和HashMap进行更新
         if ("d".equals(op)){
             broadcastState.remove(key);
             configMap.remove(key);

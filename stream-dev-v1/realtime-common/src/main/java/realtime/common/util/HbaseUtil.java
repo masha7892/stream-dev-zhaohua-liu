@@ -342,7 +342,7 @@ public class HbaseUtil {
     public static void main(String[] args) throws IOException {
 
 
-        String nameSpace = "testNameSpace";
+        String nameSpace = "e_commerce";
         String tableName = "testTableName";
         String[] FamilyList = {"info","grade"};
         String jsonStr = "{\"id\":1,\"name\":\"张三\"}";
@@ -357,8 +357,8 @@ public class HbaseUtil {
 //        createHbaseTable(hbaseConnection,nameSpace,tableName,FamilyList);
 
         //列出表
-//        showHbaseTable(hbaseConnection,nameSpace);
-//        showHbaseTable(hbaseConnection,"e_commerce");
+        showHbaseTable(hbaseConnection,nameSpace);
+        showHbaseTable(hbaseConnection,"e_commerce");
 
         //插入数据
 //        putRow(hbaseConnection,nameSpace,tableName,"1","info",jsonObj);

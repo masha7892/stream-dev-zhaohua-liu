@@ -59,7 +59,7 @@ public class DwdTradeOrderCancelDetail extends BaseSQLApp {
                         "split_activity_amount string," +
                         "split_coupon_amount string," +
                         "split_total_amount string," +
-                        "ts bigint)"+ SQLutil.getKafkaDDL(Constant.TOPIC_DWD_TRADE_ORDER_DETAIL,Constant.TOPIC_DWD_TRADE_ORDER_DETAIL)
+                        "ts bigint)"+ SQLutil.getKafkaDDL(Constant.TOPIC_DWD_TRADE_ORDER_DETAIL,Constant.TOPIC_DWD_TRADE_ORDER_CANCEL_DETAIL)
         );
         //将下单事实表和取消订单表进行关联
         Table JoinTable = tEnv.sqlQuery(

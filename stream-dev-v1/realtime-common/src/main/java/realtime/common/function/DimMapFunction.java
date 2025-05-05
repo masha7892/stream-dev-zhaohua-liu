@@ -12,8 +12,6 @@ import realtime.common.util.RedisUtil;
 import redis.clients.jedis.Jedis;
 
 /**
- * @author Felix
- * @date 2024/6/12
  * 维度关联旁路缓存优化后的模板抽取
  */
 public abstract class DimMapFunction<T> extends RichMapFunction<T,T> implements DimJoinFunction<T> {

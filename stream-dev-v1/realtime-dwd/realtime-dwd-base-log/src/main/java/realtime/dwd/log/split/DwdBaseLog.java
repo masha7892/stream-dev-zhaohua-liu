@@ -29,7 +29,7 @@ import java.util.HashMap;
  * @Date 2025/4/14.11:53
  * @description: log数据分流
  */
-public class DwdBaseLog extends BaseApp {
+public class    DwdBaseLog extends BaseApp {
     public static final String START =  "start";
     public static final String ERR = "err";
     public static final String DISPLAY = "display";

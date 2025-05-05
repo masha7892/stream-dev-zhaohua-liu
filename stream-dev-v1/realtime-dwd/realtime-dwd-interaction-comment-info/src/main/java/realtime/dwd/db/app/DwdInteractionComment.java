@@ -23,6 +23,7 @@ public class DwdInteractionComment extends BaseSQLApp {
     public void handle(StreamTableEnvironment tEnv) {
         //从kafka的topic_db主题中读取数据 创建动态表
         readOdsDb(tEnv, Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO);
+
 //        过滤出评论数据
         Table commentInfoTable = tEnv.sqlQuery(
                 "select " +
@@ -74,6 +75,7 @@ public class DwdInteractionComment extends BaseSQLApp {
         );
         //数据写入kafka
         joinTable.executeInsert(Constant.TOPIC_DWD_INTERACTION_COMMENT_INFO);
+
 
     }
 }

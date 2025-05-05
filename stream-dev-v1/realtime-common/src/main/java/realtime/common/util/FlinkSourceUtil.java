@@ -77,7 +77,7 @@ public class FlinkSourceUtil {
                 .username(Constant.MYSQL_USER_NAME)
                 .password(Constant.MYSQL_PASSWORD)
                 .deserializer(new JsonDebeziumDeserializationSchema())
-                .startupOptions(StartupOptions.initial())
+                .startupOptions(StartupOptions.latest())
                 .jdbcProperties(properties1)
                 .debeziumProperties(properties2)
                 .build();

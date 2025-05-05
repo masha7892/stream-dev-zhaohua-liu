@@ -17,8 +17,8 @@ public class SQLutil {
                 "    'properties.bootstrap.servers' = 'cdh01:9092'," +
                 "    'properties.group.id' = '"+groupID+"'," +
                 //latest
-                "    'scan.startup.mode' = 'earliest-offset'," +
-//                "    'scan.startup.mode' = 'latest-offset'," +
+//                "    'scan.startup.mode' = 'earliest-offset'," +
+                "    'scan.startup.mode' = 'group-offsets'," +
                 "    'format' = 'json'" +
                 ")";
     }

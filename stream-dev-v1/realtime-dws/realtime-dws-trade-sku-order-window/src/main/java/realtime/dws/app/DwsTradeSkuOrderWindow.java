@@ -48,7 +48,7 @@ public class DwsTradeSkuOrderWindow extends BaseApp {
         );
     }
 
-    //json聚合
+    //json聚合函数
     private static JSONObject reduceJson(JSONObject t1,JSONObject t2,String... s){
         for (String s1 : s) {
             t1.put(s1,t1.getBigDecimal(s1).add(t2.getBigDecimal(s1)));
@@ -313,7 +313,6 @@ public class DwsTradeSkuOrderWindow extends BaseApp {
         c1DS
                 .map(jsonObject -> jsonObject.toJSONString(jsonObject))
                 .sinkTo(FlinkSinkUtil.getDorisSink("dws_trade_sku_order_window"));
-
     }
 }
 

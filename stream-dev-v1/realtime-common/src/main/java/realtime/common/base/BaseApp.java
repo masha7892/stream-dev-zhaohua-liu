@@ -89,7 +89,7 @@ public abstract class BaseApp {
 
     //todo 其他需要读取kafka的分层使用
     // 参数为rest端口号,并行度个数,检查点在hdfs存储位置,读取的topic
-    public void start(int port,int parallelism,String ckAndGroupId,String topic) throws Exception {
+    public void  start(int port,int parallelism,String ckAndGroupId,String topic) throws Exception {
         StreamExecutionEnvironment env = configureEnvironment(port, parallelism, ckAndGroupId);
         //读取kafka的source
         KafkaSource<String> kafkaSource = FlinkSourceUtil.getKafkaSource(topic, ckAndGroupId);
